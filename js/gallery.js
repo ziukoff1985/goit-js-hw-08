@@ -93,15 +93,25 @@ function handleClick(event) {
     return;
   }
 
-  const clickedLink = event.target.closest('.gallery-link');
+  // const clickedLink = event.target.closest('.gallery-link');
 
-  const imageLink = clickedLink.querySelector('.gallery-image').dataset.source;
+  // const imageLink = clickedLink.querySelector('.gallery-image').dataset.source;
 
-  const imageDescription = clickedLink.querySelector('.gallery-image').alt;
+  // //   const imageLink = clickedLink.href;
+
+  // const imageDescription = clickedLink.querySelector('.gallery-image').alt;
+
+  // const instance = basicLightbox.create(`
+  //     <div class="modal">
+  //       <img src="${imageLink}" alt="${imageDescription}">
+  //     </div>
+  //     `);
+  const imageLink = event.target.dataset.source;
+  const imageAlt = event.target.alt;
 
   const instance = basicLightbox.create(`
       <div class="modal">
-        <img src="${imageLink}" alt="${imageDescription}">
+        <img src="${imageLink}" alt="${imageAlt}">
       </div>
       `);
 
