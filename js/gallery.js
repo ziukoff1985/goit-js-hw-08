@@ -1,5 +1,7 @@
 'use strict';
 
+// Масив об'єктів, який містить дані про зображення.
+// Кожен об'єкт представляє одне зображення і має три властивості
 const images = [
   {
     preview:
@@ -66,54 +68,60 @@ const images = [
   },
 ];
 
+// Отримуємо посилання на елемент DOM із класом `.gallery`.
+// Це контейнер, у якому будуть розміщені всі зображення.
 const gallery = document.querySelector('.gallery');
 
+// Додаємо створену розмітку до контейнера `.gallery` за допомогою `insertAdjacentHTML`.
+// Другим аргументом викликаємо функцію `createMarkup` для створення HTML-розмітки з масиву `images`.
 gallery.insertAdjacentHTML('beforeend', createMarkup(images));
 
+// Функція, яка створює HTML-розмітку для кожного зображення у масиві.
 function createMarkup(arr) {
+  // Використовуємо метод `map`, щоб перетворити кожен об'єкт у масиві `arr` у рядок HTML.
+  // Кожне зображення обгорнуте у <li> для списку
+  // <a class="gallery-link"> - посилання на велике зображення
+  // <img class="gallery-image">:
+  // - src: URL для попереднього перегляду
+  // - data-source: URL для великого зображення, збережений у data-атрибуті
+  // - alt: опис зображення
   return arr
     .map(
       item => `
-      <li class="gallery-item">
+      <li class="gallery-item"> 
         <a class="gallery-link" href="${item.original}">
           <img class="gallery-image" src="${item.preview}" data-source="${item.original}" alt="${item.description}" />
         </a>
       </li>
       `
     )
-    .join('');
+    .join(''); // Об'єднуємо всі рядки в один рядок для вставки в DOM.
 }
 
+// Додаємо слухач подій до галереї, який викликається при кліку.
 gallery.addEventListener('click', handleClick);
 
+// Функція обробки кліків по галереї.
 function handleClick(event) {
-  event.preventDefault();
+  event.preventDefault(); // Забороняємо стандартну поведінку браузера (перехід за посиланням).
 
+  // Перевіряємо, якщо клік було зроблено не на зображенні, а десь на галереї
+  // Припиняємо виконання функції (return), щоб запобігти відкриттю модального вікна.
   if (event.target === event.currentTarget) {
-    return;
+    return; // Якщо клацнули на фон галереї (поза картинкою), зупиняємо виконання.
   }
 
-  // const clickedLink = event.target.closest('.gallery-link');
+  // Отримуємо значення атрибута `data-source` з об'єкта `dataset` цільового елемента.
+  const imageLink = event.target.dataset.source; // URL великого зображення.
+  const imageAlt = event.target.alt; // Опис зображення.
 
-  // const imageLink = clickedLink.querySelector('.gallery-image').dataset.source;
-
-  // //   const imageLink = clickedLink.href;
-
-  // const imageDescription = clickedLink.querySelector('.gallery-image').alt;
-
-  // const instance = basicLightbox.create(`
-  //     <div class="modal">
-  //       <img src="${imageLink}" alt="${imageDescription}">
-  //     </div>
-  //     `);
-  const imageLink = event.target.dataset.source;
-  const imageAlt = event.target.alt;
-
+  // Створюємо модальне вікно для перегляду великого зображення за допомогою бібліотеки `basicLightbox`.
+  // - imageLink: велике зображення
   const instance = basicLightbox.create(`
       <div class="modal">
         <img src="${imageLink}" alt="${imageAlt}">
       </div>
       `);
 
-  instance.show();
+  instance.show(); // Відображаємо модальне вікно.
 }
